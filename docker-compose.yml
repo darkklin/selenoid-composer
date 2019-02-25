@@ -1,0 +1,43 @@
+version: "3"
+version: '3'
+networks:
+  selenoid:
+    external:
+      name: selenoid # This assumes network is already created
+services:
+  selenoid:
+    networks:
+      selenoid: null
+    image: aerokube/selenoid:latest-release
+    volumes:
+      - "$PWD:/etc/selenoid"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "$PWD:/opt/selenoid/video"
+      - "$PWD:/opt/selenoid/logs"
+    environment:
+      - OVERRIDE_VIDEO_OUTPUT_DIR=$PWD
+    command: ["-conf", "/etc/selenoid/browsers.json", "-video-output-dir", "/opt/selenoid/video", "-log-output-dir", "/opt/selenoid/logs", "-container-network", "selenoid"]
+    ports:
+      - "4444:4444"
+  search-module:
+    image: darkklin/selenium-docker
+    depends_on:
+      - chrome
+      - firefox
+    environment:
+      - HUB_HOST=hub
+      - BROWSER=firefox
+      - MODULE=search-module.xml
+    volumes:
+      - ./output/search-result:/usr/share/udemy/test-output      
+  book-flight-module:
+    image: darkklin/selenium-docker
+    depends_on:
+      - chrome
+      - firefox
+    environment:
+      - HUB_HOST=hub
+      - BROWSER=chrome
+      - MODULE=book-flight-module.xml
+    volumes:
+      - ./output/book-result:/usr/share/udemy/test-output   
