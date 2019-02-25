@@ -22,10 +22,9 @@ services:
   search-module:
     image: darkklin/selenium-docker
     depends_on:
-      - chrome
-      - firefox
+      - selenoid    
     environment:
-      - HUB_HOST=hub
+      - HUB_HOST=selenoid
       - BROWSER=firefox
       - MODULE=search-module.xml
     volumes:
@@ -33,10 +32,9 @@ services:
   book-flight-module:
     image: darkklin/selenium-docker
     depends_on:
-      - chrome
-      - firefox
+      - selenoid
     environment:
-      - HUB_HOST=hub
+      - HUB_HOST=selenoid
       - BROWSER=chrome
       - MODULE=book-flight-module.xml
     volumes:
